@@ -12,6 +12,8 @@
 #define MEMS_I2C_GPIO                 GPIOB
 #define MEMS_I2C_RCC_APB1Periph_I2C   RCC_APB1Periph_I2C1
 
+#define SENSITIVITY 0.98
+
 void AccelInit();
 uint8_t AccelStatus();
 void AccelData();

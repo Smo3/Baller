@@ -16,5 +16,6 @@ void DrawImage(uint16_t Y, uint16_t X, uint16_t width, uint16_t height, const ui
 void DrawChar(uint8_t Xpos, uint16_t Ypos, uint8_t scale, const uint16_t *c);
 void DrawBall(uint16_t Xpos, uint16_t Ypos);
 void SetBallPos(uint16_t Xpos, uint16_t Ypos);
+void DrawBackground(uint16_t width, uint16_t height, const uint16_t *c);
 
 #endif /* DRAWING_H_ */

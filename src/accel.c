@@ -153,7 +153,7 @@ int8_t GetMA_X()
 	{
 		sum += lastX[i];
 	}
-	return (sum / cntX+1);
+	return (sum / cntX+1)*SENSITIVITY;
 }
 
 int8_t GetMA_Y()
@@ -163,7 +163,7 @@ int8_t GetMA_Y()
 	{
 		sum += lastY[i];
 	}
-	return (sum / cntY+1);
+	return (sum / cntY+1)*SENSITIVITY;
 }
 
 int8_t GetMA_Z()
@@ -173,7 +173,7 @@ int8_t GetMA_Z()
 	{
 		sum += lastZ[i];
 	}
-	return (sum / cntZ+1);
+	return (sum / cntZ+1)*SENSITIVITY;
 }
 
 void UpdateMA_X(int8_t data)

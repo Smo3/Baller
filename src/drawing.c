@@ -45,6 +45,24 @@ void DrawChar(uint8_t Xpos, uint16_t Ypos, uint8_t scale, const uint16_t *c)
   }
 }
 
+void DrawBackground(uint16_t width, uint16_t height, const uint16_t *c)
+{
+	int i, u, k;
+	for(k = 0; k < 320/width; k++)
+	{
+		for(i = 0; i < height; i++)
+		{
+			LCD_SetCursor(i, k*width);
+			LCD_WriteRAM_Prepare();
+			for(u = 0; u < width; u++)
+			{
+				LCD_WriteRAM(c[i * width + u]);
+			}
+			LCD_CtrlLinesWrite(LCD_NCS_GPIO_PORT, LCD_NCS_PIN, Bit_SET);
+		}
+	}
+}
+
 void DrawImage(uint16_t Y, uint16_t X, uint16_t width, uint16_t height, const uint16_t *c)
 {
 	int i, u;

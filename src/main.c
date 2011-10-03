@@ -89,12 +89,12 @@ GAME_STATE gameStatus = MENU_MAIN;
   STM3210C_LCD_Init();
 
   ShowStartup();
-  //ShowMenu();
+  ShowMenu();
 
   lpCnt = 1;
 
   /* Main Loop */
-  int x, y;
+  uint16_t x, y;
   SetBallPos(160, 120);
   while(1)
   {
@@ -213,38 +213,80 @@ void ShowMenu()
 	int i, u;
 	LCD_Clear(BACK_COLOR);
 
-	DrawImage(10, 310, MENUTOP_IMAGE_W, MENUTOP_IMAGE_H, menuTop_image);
+	//DrawBackground(8, 8, background_image);
 
-	for(i = MENUTOP_IMAGE_H+10; i < 229; i++)
+	switch(gameStatus)
 	{
-	   	LCD_SetCursor(i, 310);
-	   	LCD_WriteRAM_Prepare(); /* Prepare to write GRAM */
-	   	for(u = 0; u < MENUTOP_IMAGE_W; u++)
-	   	{
-	 		LCD_WriteRAM(menuTop_image[(MENUTOP_IMAGE_H - 1) * MENUTOP_IMAGE_W + u]);
-	  	}
+		case MENU_MAIN:
+			DrawImage(10, 310, BUTTON_IMAGE_W, BUTTON_IMAGE_H, newGame_image);
+			DrawImage(10+BUTTON_IMAGE_H, 310, BUTTON_IMAGE_W, BUTTON_IMAGE_H, accelData_image);
+			/*
+			DrawImage(10, 310, MENUTOP_IMAGE_W, MENUTOP_IMAGE_H, menuTop_image);
 
-	  	LCD_CtrlLinesWrite(LCD_NCS_GPIO_PORT, LCD_NCS_PIN, Bit_SET);
+			for(i = MENUTOP_IMAGE_H+10; i < 229; i++)
+			{
+				LCD_SetCursor(i, 310);
+				LCD_WriteRAM_Prepare();
+				for(u = 0; u < MENUTOP_IMAGE_W; u++)
+				{
+					LCD_WriteRAM(menuTop_image[(MENUTOP_IMAGE_H - 1) * MENUTOP_IMAGE_W + u]);
+				}
+
+				LCD_CtrlLinesWrite(LCD_NCS_GPIO_PORT, LCD_NCS_PIN, Bit_SET);
+			}
+
+			for(i = MENUTOP_IMAGE_H-1; i > 0 ; i--)
+			{
+				LCD_SetCursor(230-i, 310);
+				LCD_WriteRAM_Prepare();
+				for(u = 0; u < MENUTOP_IMAGE_W; u++)
+				{
+					LCD_WriteRAM(menuTop_image[i * MENUTOP_IMAGE_W + u]);
+				}
+				LCD_CtrlLinesWrite(LCD_NCS_GPIO_PORT, LCD_NCS_PIN, Bit_SET);
+			}
+
+			DrawChar(40, )
+
+*/
+			TS_STATE* TouchScreen = IOE_TS_GetState();
+			uint8_t menuSelected = 0;
+			while(menuSelected == 0){
+				TouchScreen = IOE_TS_GetState();
+				if(TouchScreen->TouchDetected == 128)
+				{
+					//char lcdLine[20];
+					//sprintf(lcdLine, "Touch X: %d Y: %d     ", (int)TouchScreen->X, (int)TouchScreen->Y);
+					//LCD_DisplayStringLine(LINE(10), (uint8_t*)lcdLine);
+					if((TouchScreen->X >= 10) && (TouchScreen->X <= (BUTTON_IMAGE_W + 10))
+							&& (TouchScreen->Y >= 10) && (TouchScreen->Y <= BUTTON_IMAGE_H + 10))
+					{
+						gameStatus = PLAYING;
+						menuSelected = 1;
+					}
+					else if((TouchScreen->X >= 10+BUTTON_IMAGE_W) && (TouchScreen->X <= (BUTTON_IMAGE_W*2 + 10))
+							&& (TouchScreen->Y >= 10+BUTTON_IMAGE_H) && (TouchScreen->Y <= BUTTON_IMAGE_H*2 + 10))
+					{
+							gameStatus = MENU_ACCEL;
+							ShowMenu();
+							menuSelected = 1;
+					}
+					else
+					{
+						menuSelected = 0;
+					}
+				}
+			}
+			Delay(400);
+		break;
+		default:
+
+		break;
 	}
+}
 
-	for(i = MENUTOP_IMAGE_H-1; i > 0 ; i--)
-	{
-	   	LCD_SetCursor(230-i, 310);
-	   	LCD_WriteRAM_Prepare(); /* Prepare to write GRAM */
-	   	for(u = 0; u < MENUTOP_IMAGE_W; u++)
-	   	{
-	 		LCD_WriteRAM(menuTop_image[i * MENUTOP_IMAGE_W + u]);
-	  	}
-	  	LCD_CtrlLinesWrite(LCD_NCS_GPIO_PORT, LCD_NCS_PIN, Bit_SET);
-	}
-
-
-
-	TS_STATE* TouchScreen = IOE_TS_GetState();
-	while(TouchScreen->TouchDetected != 128){
-		TouchScreen = IOE_TS_GetState();
-	}
-	Delay(400);
+void Bounced()
+{
 
 }
 
@@ -277,6 +319,7 @@ uint32_t sEE_TIMEOUT_UserCallback(void)
   /* Return with error code */
   return sEE_FAIL;
 }
+
 #endif
 #endif /* USE_SEE */
 

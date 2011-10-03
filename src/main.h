@@ -48,7 +48,7 @@ typedef enum {
 
 #define MENU_BORDER RGB565(0x33, 0x33, 0x33)
 #define BUTTON_BORDER RGB565(0x50, 0x50, 0x50)
-#define BUTTON_BACKGROUND RGB565(0x40, 0x40, 0x40)
+#define BUTTON_BACKGROUND RGB565(0x5D, 0x5D, 0x5D)
 
 void Delay(uint16_t nTime);
 void TimingDelay(void);
@@ -57,5 +57,6 @@ void RepaintScreen( void );
 void Putpixel(uint16_t x, uint16_t y, uint16_t col);
 void ShowStartup();
 void ShowMenu();
+void Bounced();
 
 #endif /* MAIN_H_ */
