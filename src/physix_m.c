@@ -27,29 +27,37 @@ void get_pos(float dt, int tilt_x, int tilt_y, uint16_t* posX, uint16_t* posY)
 	
 
 
-	if     (*posX+BALL_SIZE >= 319)
+	if(*posX+BALL_SIZE >= 319)
 	{
-		v0_x = -v0_x*rebound;
+		v0_x = -v0_x*rebound + (a_x * dt);
 		*posX=319-BALL_SIZE;
 	}
 	else if(*posX-BALL_SIZE <    0)
 	{
-		v0_x = -v0_x*rebound;
+		v0_x = -v0_x*rebound + (a_x * dt);
 		*posX=BALL_SIZE;
 	}
-	if     (*posY+BALL_SIZE >= 239)
+	else
 	{
-		v0_y = -v0_y*rebound;
+		v0_x += (a_x * dt);
+	}
+	if(*posY+BALL_SIZE >= 239)
+	{
+		v0_y = -v0_y*rebound + (a_y * dt);
 		*posY=239-BALL_SIZE;
 	}
 	else if(*posY-BALL_SIZE <    0)
 	{
-		v0_y = -v0_y*rebound;
+		v0_y = -v0_y*rebound + (a_y * dt);
 		*posY=BALL_SIZE;
 	}
+	else
+	{
+		v0_y += (a_y * dt);
+	}
 
-	v0_x += (a_x * dt);
-	v0_y += (a_y * dt);
+	//v0_x += (a_x * dt);
+	//v0_y += (a_y * dt);
 
 }
 
