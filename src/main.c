@@ -210,61 +210,33 @@ void ShowStartup()
 
 void ShowMenu()
 {
-	int i, u;
+	//int i, u;
 	LCD_Clear(BACK_COLOR);
 
 	//DrawBackground(8, 8, background_image);
-
+	uint8_t menuSelected = 0;
+	TS_STATE* TouchScreen = IOE_TS_GetState();
 	switch(gameStatus)
 	{
 		case MENU_MAIN:
 			DrawImage(10, 310, BUTTON_IMAGE_W, BUTTON_IMAGE_H, newGame_image);
-			DrawImage(10+BUTTON_IMAGE_H, 310, BUTTON_IMAGE_W, BUTTON_IMAGE_H, accelData_image);
-			/*
-			DrawImage(10, 310, MENUTOP_IMAGE_W, MENUTOP_IMAGE_H, menuTop_image);
+			DrawImage(9+BUTTON_IMAGE_H*1, 310, BUTTON_IMAGE_W, BUTTON_IMAGE_H, accelData_image);
+			DrawImage(8+BUTTON_IMAGE_H*2, 310, BUTTON_IMAGE_W, BUTTON_IMAGE_H, settings_image);
+			DrawImage(8+BUTTON_IMAGE_H*3, 310, BUTTON_IMAGE_W, BUTTON_IMAGE_H, about_image);
 
-			for(i = MENUTOP_IMAGE_H+10; i < 229; i++)
-			{
-				LCD_SetCursor(i, 310);
-				LCD_WriteRAM_Prepare();
-				for(u = 0; u < MENUTOP_IMAGE_W; u++)
-				{
-					LCD_WriteRAM(menuTop_image[(MENUTOP_IMAGE_H - 1) * MENUTOP_IMAGE_W + u]);
-				}
 
-				LCD_CtrlLinesWrite(LCD_NCS_GPIO_PORT, LCD_NCS_PIN, Bit_SET);
-			}
 
-			for(i = MENUTOP_IMAGE_H-1; i > 0 ; i--)
-			{
-				LCD_SetCursor(230-i, 310);
-				LCD_WriteRAM_Prepare();
-				for(u = 0; u < MENUTOP_IMAGE_W; u++)
-				{
-					LCD_WriteRAM(menuTop_image[i * MENUTOP_IMAGE_W + u]);
-				}
-				LCD_CtrlLinesWrite(LCD_NCS_GPIO_PORT, LCD_NCS_PIN, Bit_SET);
-			}
-
-			DrawChar(40, )
-
-*/
-			TS_STATE* TouchScreen = IOE_TS_GetState();
-			uint8_t menuSelected = 0;
 			while(menuSelected == 0){
 				TouchScreen = IOE_TS_GetState();
 				if(TouchScreen->TouchDetected == 128)
 				{
-					//char lcdLine[20];
-					//sprintf(lcdLine, "Touch X: %d Y: %d     ", (int)TouchScreen->X, (int)TouchScreen->Y);
-					//LCD_DisplayStringLine(LINE(10), (uint8_t*)lcdLine);
 					if((TouchScreen->X >= 10) && (TouchScreen->X <= (BUTTON_IMAGE_W + 10))
 							&& (TouchScreen->Y >= 10) && (TouchScreen->Y <= BUTTON_IMAGE_H + 10))
 					{
 						gameStatus = PLAYING;
 						menuSelected = 1;
 					}
-					else if((TouchScreen->X >= 10+BUTTON_IMAGE_W) && (TouchScreen->X <= (BUTTON_IMAGE_W*2 + 10))
+					else if((TouchScreen->X >= 10) && (TouchScreen->X <= (BUTTON_IMAGE_W + 10))
 							&& (TouchScreen->Y >= 10+BUTTON_IMAGE_H) && (TouchScreen->Y <= BUTTON_IMAGE_H*2 + 10))
 					{
 							gameStatus = MENU_ACCEL;
@@ -277,12 +249,35 @@ void ShowMenu()
 					}
 				}
 			}
-			Delay(400);
+
+		break;
+		case MENU_ACCEL:
+
+			//uint16_t lpCnt = 0;
+			LCD_DisplayStringLine(Line2, "X");
+
+			DrawImage(230-BUTTON_IMAGE_H, 310, BUTTON_IMAGE_W, BUTTON_IMAGE_H, exit_image);
+			while(menuSelected == 0){
+				TouchScreen = IOE_TS_GetState();
+				if(TouchScreen->TouchDetected == 128)
+				{
+					if((TouchScreen->X >= 10) && (TouchScreen->X <= (BUTTON_IMAGE_W + 10))
+							&& (TouchScreen->Y >= 230-BUTTON_IMAGE_H) && (TouchScreen->Y <= 230))
+					{
+						gameStatus = MENU_MAIN;
+						ShowMenu();
+						menuSelected = 1;
+					}
+				}
+			}
+
+
 		break;
 		default:
 
 		break;
 	}
+	Delay(400);
 }
 
 void Bounced()
